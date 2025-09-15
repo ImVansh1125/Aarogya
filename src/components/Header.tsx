@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from './ui/sheet';
 import { Menu, Phone, Mail, MapPin, Calendar, FileText } from 'lucide-react';
 
 export function Header() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isDarkBackground, setIsDarkBackground] = useState(false);
@@ -31,14 +33,12 @@ export function Header() {
         // Over hero section - light background
         setIsDarkBackground(false);
       } else {
-        // Check specific sections
         const footerSection = document.querySelector('footer');
         const testimonialsSection = document.querySelector('#testimonials');
 
         if (footerSection instanceof HTMLElement) {
           const footerTop = footerSection.offsetTop;
           if (offset >= footerTop - 100) {
-            // Over footer - dark background
             setIsDarkBackground(true);
             return;
           }
@@ -48,7 +48,6 @@ export function Header() {
           const testimonialsTop = testimonialsSection.offsetTop;
           const testimonialsBottom = testimonialsTop + testimonialsSection.offsetHeight;
           if (offset >= testimonialsTop - 100 && offset < testimonialsBottom + 100) {
-            // Over testimonials - potentially dark background
             setIsDarkBackground(true);
             return;
           }
@@ -122,6 +121,7 @@ export function Header() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => navigate('/login')}
             className={`transition-all duration-300 ${
               scrolled
                 ? 'border-[var(--medical-teal)] text-[var(--medical-teal)] hover:bg-[var(--medical-teal)] hover:text-white bg-white/50 backdrop-blur-sm'
@@ -133,8 +133,10 @@ export function Header() {
             <FileText className="w-4 h-4 mr-2" />
             Login
           </Button>
+
           <Button
             size="lg"
+            onClick={() => navigate('/tests')}
             className={`transition-all duration-300 ${
               scrolled || !isDarkBackground
                 ? 'bg-[var(--medical-green)] hover:bg-[var(--medical-green)]/90 text-white'
@@ -181,11 +183,25 @@ export function Header() {
               ))}
 
               <div className="flex flex-col space-y-3 pt-6 border-t">
-                <Button variant="outline" className="border-[var(--medical-teal)] text-[var(--medical-teal)] hover:bg-[var(--medical-teal)] hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-[var(--medical-teal)] text-[var(--medical-teal)] hover:bg-[var(--medical-teal)] hover:text-white"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate('/login');
+                  }}
+                >
                   <FileText className="w-4 h-4 mr-2" />
                   Get Report
                 </Button>
-                <Button className="bg-[var(--medical-green)] hover:bg-[var(--medical-green)]/90">
+
+                <Button
+                  className="bg-[var(--medical-green)] hover:bg-[var(--medical-green)]/90"
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate('/tests');
+                  }}
+                >
                   <Calendar className="w-4 h-4 mr-2" />
                   Book a Test
                 </Button>
@@ -212,3 +228,5 @@ export function Header() {
     </header>
   );
 }
+
+export default Header;
